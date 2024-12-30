@@ -16,4 +16,9 @@ public class EmployeeController {
     public String getAllEmployees(@RequestParam(required = false) String age,@RequestParam(required = false) String sortBy){
         return "Hi all "+age+ " "+sortBy;
     }
+    @PostMapping
+    public EmployeeDTO addEmployee(@RequestBody EmployeeDTO inputEmp){
+        inputEmp.setId(13L);
+        return inputEmp;
+    }
 }

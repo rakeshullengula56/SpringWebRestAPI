@@ -1,8 +1,7 @@
 package com.anime.SpringWebRestAPI.controllers;
 
 import com.anime.SpringWebRestAPI.dto.EmployeeDTO;
-import com.anime.SpringWebRestAPI.entities.EmployeeEntity;
-import com.anime.SpringWebRestAPI.repositories.EmployeeRepository;
+import com.anime.SpringWebRestAPI.services.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,27 +10,28 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/employees")
 public class EmployeeController {
-    private final EmployeeRepository employeeRepository;
 
-    public EmployeeController(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    private final EmployeeService employeeService;
+
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService= employeeService;
     }
 
     @GetMapping("/{empId}")
-    public EmployeeEntity getEmployeeById(@PathVariable(name = "empId") Long id) {
-        return employeeRepository.findById(id).orElse(null); // Fixed syntax for `findById`
+    public EmployeeDTO getEmployeeById(@PathVariable(name = "empId") Long id) {
+        return employeeService.getEmployeeById(id); // Fixed syntax for `findById`
     }
 
     @GetMapping
-    public List<EmployeeEntity> getAllEmployees(
+    public List<EmployeeDTO> getAllEmployees(
             @RequestParam(required = false) String age,
             @RequestParam(required = false) String sortBy) {
-        return employeeRepository.findAll();
+        return employeeService.getAllEmployees();
     }
 
     @PostMapping
-    public EmployeeEntity addEmployee(@RequestBody EmployeeEntity inputEmp) {
-        return employeeRepository.save(inputEmp);
+    public EmployeeDTO addEmployee(@RequestBody EmployeeDTO inputEmp) {
+        return employeeService.addEmployee(inputEmp);
     }
 }
 

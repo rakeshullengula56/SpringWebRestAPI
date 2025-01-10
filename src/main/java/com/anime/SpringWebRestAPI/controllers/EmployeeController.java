@@ -1,6 +1,7 @@
 package com.anime.SpringWebRestAPI.controllers;
 
 import com.anime.SpringWebRestAPI.dto.EmployeeDTO;
+import com.anime.SpringWebRestAPI.exceptions.ResourceNotFoundException;
 import com.anime.SpringWebRestAPI.services.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
@@ -26,9 +28,12 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable(name = "empId") Long id) {
         Optional<EmployeeDTO> employeeDTO = employeeService.getEmployeeById(id);
         return employeeDTO.map(employeeDTO1 -> ResponseEntity.ok(employeeDTO1))
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(()->new ResourceNotFoundException("Employee not found with ID "+id));
     }
-
+//    @ExceptionHandler(NoSuchElementException.class)
+//    public ResponseEntity<String>handleExceptionNotFound(NoSuchElementException exception){
+//        return new ResponseEntity<>("Employee Not Found",HttpStatus.NOT_FOUND);
+//    }
 
     @GetMapping
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees(
@@ -43,7 +48,7 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeDTO, HttpStatus.CREATED);
     }
     @PutMapping("/{empId}")
-    public ResponseEntity<EmployeeDTO> updateEmployeeById(@RequestBody EmployeeDTO inputEmp,@PathVariable(name="empId")Long id){
+    public ResponseEntity<EmployeeDTO> updateEmployeeById(@RequestBody @Valid EmployeeDTO inputEmp,@PathVariable(name="empId")Long id){
         return ResponseEntity.ok(employeeService.updateEmployeeById(inputEmp,id));
     }
     @DeleteMapping("/{empId}")

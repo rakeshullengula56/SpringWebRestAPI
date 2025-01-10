@@ -2,6 +2,7 @@ package com.anime.SpringWebRestAPI.controllers;
 
 import com.anime.SpringWebRestAPI.dto.EmployeeDTO;
 import com.anime.SpringWebRestAPI.services.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeDTO> addEmployee(@RequestBody EmployeeDTO inputEmp) {
+    public ResponseEntity<EmployeeDTO> addEmployee(@RequestBody @Valid EmployeeDTO inputEmp) {
         EmployeeDTO employeeDTO= employeeService.addEmployee(inputEmp);
         return new ResponseEntity<>(employeeDTO, HttpStatus.CREATED);
     }

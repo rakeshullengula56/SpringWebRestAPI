@@ -1,14 +1,12 @@
 package com.anime.SpringWebRestAPI.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
-
+@Builder
 @Entity
 @Setter
 @Getter
@@ -17,9 +15,9 @@ import java.time.LocalDate;
 @Table(name="employees")
 public class EmployeeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(nullable = false)
     private String name;
     private String email;
     private Integer age;
@@ -28,4 +26,7 @@ public class EmployeeEntity {
     private LocalDate dateOfJoining;
     @JsonProperty("isActive")
     private Boolean isActive;
+    @OneToOne(mappedBy = "manager")
+    @JsonIgnore//added this annotation because recursive nature of manager and managingDepartment properties
+    private DepartmentEntity managingDepartment;//managingDepartment will be ignored when get method is called in DepartmentController
 }
